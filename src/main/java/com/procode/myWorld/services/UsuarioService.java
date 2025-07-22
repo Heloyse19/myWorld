@@ -30,4 +30,22 @@ public class UsuarioService {
         return usuarioRepository.save(user);
     }
 
+    public Usuario autenticar(String email, String senha){
+        Usuario usuario = usuarioRepository.findByEmail(email);
+
+        if(usuario == null){
+            throw new RuntimeException("Usuario não cadastrado!");
+        }
+
+        if(!passwordEncoder.matches(senha, usuario.getSenha())){
+            throw new RuntimeException("Senha incorreta!");
+        }
+
+        if(!usuario.isAtivo()){
+            throw new RuntimeException("Usuario inativo!");
+        }
+
+        return usuario;
+    }
+
 }

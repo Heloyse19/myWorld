@@ -1,5 +1,6 @@
 package com.procode.myWorld.controllers;
 
+import com.procode.myWorld.dtos.LoginResponseDTO;
 import com.procode.myWorld.dtos.UsuarioCadastroDTO;
 import com.procode.myWorld.dtos.UsuarioLoginDTO;
 import com.procode.myWorld.models.Usuario;
@@ -26,7 +27,16 @@ public class UsuarioController {
         }
     }
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody @Valid UsuarioLoginDTO loginDTO){
-        return ResponseEntity.ok().build();
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid UsuarioLoginDTO loginDTO){
+        Usuario usuario = usuarioService.autenticar(loginDTO.email(), loginDTO.senha());
+
+        LoginResponseDTO response = new LoginResponseDTO(
+                usuario.getId(),
+                usuario.getEmail(),
+                usuario.getNome(),
+                "token"
+
+        );
+        return ResponseEntity.ok(response);
     }
 }
